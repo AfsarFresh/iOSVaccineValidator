@@ -31,9 +31,9 @@ struct Constants {
     }
     
     struct JWKSPublic {
-        static var prodIssuers = "https://smarthealthcard.phsa.ca/v1/trusted/.well-known/issuers.json"
-        static var devIssuers = "https://phsasmarthealthcard-dev.azurewebsites.net/v1/trusted/.well-known/issuers.json"
-        static var testIssuers = "https://phsasmarthealthcard-dev.azurewebsites.net/v1/trusted/.well-known/issuers.json"
+        static var prodIssuers = "https://pvc.service.yukon.ca/v1/verifier/.well-known/issuers.json"
+        static var devIssuers = "https://pvc.service.yukon.ca/test/v1/verifier/.well-known/issuers.json"
+        static var testIssuers = "https://pvc.service.yukon.ca/test/v1/verifier/.well-known/issuers.json"
         static var issuersListUrl: String {
             switch BCVaccineValidator.mode {
             case .Prod:
@@ -44,9 +44,9 @@ struct Constants {
                 return devIssuers
             }
         }
-        static var prodRules = "https://phsasmarthealthcard-dev.azurewebsites.net/v1/Covid19Proof/.well-known/rules.json"
+        static var prodRules = "https://pvc.service.yukon.ca/v1/verifier/.well-known/rules.json"
         static var devRules = "https://ds9mwekyyprcy.cloudfront.net/rules.json"
-        static var testRuls = "https://phsasmarthealthcard-dev.azurewebsites.net/v1/Covid19Proof/.well-known/rules.json"
+        static var testRuls = "https://pvc.service.yukon.ca/test/v1/verifier/.well-known/rules.json"
         
         static var rulesURL: String {
             switch BCVaccineValidator.mode {
