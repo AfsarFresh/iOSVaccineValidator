@@ -49,6 +49,7 @@ struct Resource: Codable {
     let name: [Name]?
     let birthDate, status: String?
     let vaccineCode: VaccineCode?
+    var code: VaccineCode?
     let patient: Patient?
     let occurrenceDateTime: String?
     let performer: [Performer]?
@@ -132,16 +133,16 @@ extension DecodedQRPayload {
     }
     
     func isExempt() -> Bool {
-        guard let resourceType = self.vc.credentialSubject.fhirBundle.entry.first(where: { $0.resource.resourceType == "Condition" }) else {
+        guard let entry = self.vc.credentialSubject.fhirBundle.entry.first(where: { $0.resource.resourceType == "Condition" }) else {
             return false
         }
-        guard let onsetDate = resourceType.resource.onsetDateTime?.vaxDate() else {
-            return false
-        }
-        guard let abatementDate = resourceType.resource.abatementDateTime?.vaxDate() else {
+        let resource = entry.resource
+        guard let ykSystemExist = resource.code?.coding.contains(where: { $0.system == Constants.JWKSPublic.codingSystem }), ykSystemExist else {
             return false
         }
         let currentDate = Date()
+        let onsetDate = resource.onsetDateTime?.vaxDate() ?? currentDate
+        let abatementDate = resource.abatementDateTime?.vaxDate() ?? currentDate
         return currentDate >= onsetDate && currentDate <= abatementDate
     }
 }
