@@ -54,6 +54,8 @@ struct Resource: Codable {
     let performer: [Performer]?
     let lotNumber: String?
     let meta: Meta?
+    let onsetDateTime: String?
+    let abatementDateTime: String?
 }
 
 // MARK: - Meta
@@ -127,5 +129,19 @@ extension DecodedQRPayload {
     func vaxes() -> [Resource] {
         return self.vc.credentialSubject.fhirBundle.entry
             .compactMap({$0.resource}).filter({$0.resourceType.lowercased() == "Immunization".lowercased()})
+    }
+    
+    func isExempt() -> Bool {
+        guard let resourceType = self.vc.credentialSubject.fhirBundle.entry.first(where: { $0.resource.resourceType == "Condition" }) else {
+            return false
+        }
+        guard let onsetDate = resourceType.resource.onsetDateTime?.vaxDate() else {
+            return false
+        }
+        guard let abatementDate = resourceType.resource.abatementDateTime?.vaxDate() else {
+            return false
+        }
+        let currentDate = Date()
+        return currentDate >= onsetDate && currentDate <= abatementDate
     }
 }
