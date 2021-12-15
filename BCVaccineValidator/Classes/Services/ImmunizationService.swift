@@ -53,7 +53,7 @@ class ImmunizationService {
         var mrnType = 0
         var nrvvType = 0
         var winacType = 0
-        var minDays = 0
+        var minDays: Int? = nil
         var processedDoseDate: Date? = nil
         
         var lastDoseDate: Date? = nil
@@ -76,7 +76,7 @@ class ImmunizationService {
             guard doesMeetRequiredTimeBetweenDoses(currentDoseDate: occurrenceDate,
                                                    lastDoseDate: processedDoseDate,
                                                    minDays: minDays) else {
-                minDays = vaxRule.minDays?.intValue ?? 0
+                minDays = vaxRule.minDays?.intValue
                 processedDoseDate = occurrenceDate
                 continue
             }
@@ -129,7 +129,7 @@ class ImmunizationService {
                 }
             }
             
-            minDays = vaxRule.minDays?.intValue ?? 0
+            minDays = vaxRule.minDays?.intValue
             processedDoseDate = occurrenceDate
         }
         
