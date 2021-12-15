@@ -60,8 +60,7 @@ struct Constants {
         }
         
         static let wellKnownJWKS_URLExtension = ".well-known/jwks.json"
-        static let codingSystem = "https://pvc.service.yukon.ca/v1/verifier/deferrals.json"
-
+        static let yukonCodingSystem = "https://pvc.service.yukon.ca/v1/verifier/deferrals.json"
     }
     
     struct CVX {
