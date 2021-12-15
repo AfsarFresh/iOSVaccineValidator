@@ -41,7 +41,7 @@ class ImmunizationService {
     }
     
     private func getImmunizationStatus(for payload: DecodedQRPayload, using rulesSet: RuleSet) -> ImmunizationStatus? {
-        if payload.isExempt() {
+        guard !payload.isExempt() else {
             return .Exempt
         }
         let payloadVaxes = payload.vaxes()
