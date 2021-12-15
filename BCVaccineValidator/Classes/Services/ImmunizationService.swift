@@ -1,5 +1,5 @@
 import Foundation
-fileprivate extension String {
+extension String {
     func vaxDate() -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = .current
@@ -41,6 +41,9 @@ class ImmunizationService {
     }
     
     private func getImmunizationStatus(for payload: DecodedQRPayload, using rulesSet: RuleSet) -> ImmunizationStatus? {
+        guard !payload.isExempt() else {
+            return .Exempt
+        }
         let payloadVaxes = payload.vaxes().sorted(by: {
             let date1: Date = $0.occurrenceDateTime?.vaxDate() ?? .distantFuture
             let date2: Date = $1.occurrenceDateTime?.vaxDate() ?? .distantFuture
