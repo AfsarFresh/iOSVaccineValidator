@@ -150,6 +150,7 @@
 		F63BE0585331CAA3482EF736803F8243 /* RequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E518C903BEBB65F8993A5AA8209F9A63 /* RequestInterceptor.swift */; };
 		F72F82A000CEC1226BD6D7EF2A95C50D /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F542A374C7959D289C3DB171155EEB7A /* HMAC.swift */; };
 		F91C0E627B2E533164B88C16F9572E89 /* Rules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5303B30D3813D021E5E26F026E68CE58 /* Rules.swift */; };
+		F99B64E8276A6FDE006479D7 /* ValueWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99B64E7276A6FDE006479D7 /* ValueWrapper.swift */; };
 		F9AE2D2D8C6BB8FE6CFAD1BD864F5625 /* BCVaccineValidator-BCVaccineValidator in Resources */ = {isa = PBXBuildFile; fileRef = EA2679D10A6EBBC1F9509B5DA90E5897 /* BCVaccineValidator-BCVaccineValidator */; };
 		F9E2BB4A273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json in Resources */ = {isa = PBXBuildFile; fileRef = F9E2BB48273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json */; };
 		F9E2BB4B273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json in Resources */ = {isa = PBXBuildFile; fileRef = F9E2BB49273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json */; };
@@ -385,6 +386,7 @@
 		F67EBD47880FBEC9FB83B761A3EBF17E /* BCVaccineValidator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = BCVaccineValidator.debug.xcconfig; sourceTree = "<group>"; };
 		F7BADA063C307EEA11E1B92B664562E2 /* Deserializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deserializer.swift; path = JOSESwift/Sources/Deserializer.swift; sourceTree = "<group>"; };
 		F8160B05B68D0C4F38478EB8F93E0684 /* JOSESwift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "JOSESwift-Info.plist"; sourceTree = "<group>"; };
+		F99B64E7276A6FDE006479D7 /* ValueWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueWrapper.swift; sourceTree = "<group>"; };
 		F9E2BB48273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json"; path = "BCVaccineValidator/Assets/pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json"; sourceTree = "<group>"; };
 		F9E2BB49273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json"; path = "BCVaccineValidator/Assets/pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json"; sourceTree = "<group>"; };
 		FB06026C8E1AF3E465C4F9CC390C43BB /* Compressor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Compressor.swift; path = JOSESwift/Sources/Compressor.swift; sourceTree = "<group>"; };
@@ -528,6 +530,7 @@
 				6DDEAD769409D522EADD7B3BBCFB262E /* NotificationExtension.swift */,
 				81101F572FD6438D18893EBC1B7919B7 /* StringExtension.swift */,
 				293643052745809F001A3BBA /* EncodableExtension.swift */,
+				F99B64E7276A6FDE006479D7 /* ValueWrapper.swift */,
 			);
 			name = Helpers;
 			path = BCVaccineValidator/Classes/Helpers;
@@ -1070,6 +1073,7 @@
 				35438275E84FF5815D8FC483445B538C /* Constants.swift in Sources */,
 				AC675EB3EA7FD46BE9CDB23FB064EA99 /* DataExtension.swift in Sources */,
 				293643062745809F001A3BBA /* EncodableExtension.swift in Sources */,
+				F99B64E8276A6FDE006479D7 /* ValueWrapper.swift in Sources */,
 				175B56F06971822ECAC53D37BD418B51 /* DateExtension.swift in Sources */,
 				42EAD83697CB25B8E4D4E680461B3CCE /* DecodedQRPayload.swift in Sources */,
 				F297F28111FF272F94FF159D44A0B852 /* DirectoryManager.swift in Sources */,
