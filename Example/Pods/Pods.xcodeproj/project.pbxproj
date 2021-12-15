@@ -151,6 +151,8 @@
 		F72F82A000CEC1226BD6D7EF2A95C50D /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F542A374C7959D289C3DB171155EEB7A /* HMAC.swift */; };
 		F91C0E627B2E533164B88C16F9572E89 /* Rules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5303B30D3813D021E5E26F026E68CE58 /* Rules.swift */; };
 		F9AE2D2D8C6BB8FE6CFAD1BD864F5625 /* BCVaccineValidator-BCVaccineValidator in Resources */ = {isa = PBXBuildFile; fileRef = EA2679D10A6EBBC1F9509B5DA90E5897 /* BCVaccineValidator-BCVaccineValidator */; };
+		F9E2BB4A273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json in Resources */ = {isa = PBXBuildFile; fileRef = F9E2BB48273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json */; };
+		F9E2BB4B273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json in Resources */ = {isa = PBXBuildFile; fileRef = F9E2BB49273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json */; };
 		FE7090208050F2249644E21073689D0F /* Decrypter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF81F4DCF1BC71F190ABBCFCE80522B /* Decrypter.swift */; };
 		FEDBAD32E2EDA85AD6E362B82892A74A /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFA7DAB178CB0710F329A313F88336AA /* Alamofire.swift */; };
 /* End PBXBuildFile section */
@@ -383,6 +385,8 @@
 		F67EBD47880FBEC9FB83B761A3EBF17E /* BCVaccineValidator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = BCVaccineValidator.debug.xcconfig; sourceTree = "<group>"; };
 		F7BADA063C307EEA11E1B92B664562E2 /* Deserializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deserializer.swift; path = JOSESwift/Sources/Deserializer.swift; sourceTree = "<group>"; };
 		F8160B05B68D0C4F38478EB8F93E0684 /* JOSESwift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "JOSESwift-Info.plist"; sourceTree = "<group>"; };
+		F9E2BB48273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json"; path = "BCVaccineValidator/Assets/pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json"; sourceTree = "<group>"; };
+		F9E2BB49273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json"; path = "BCVaccineValidator/Assets/pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json"; sourceTree = "<group>"; };
 		FB06026C8E1AF3E465C4F9CC390C43BB /* Compressor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Compressor.swift; path = JOSESwift/Sources/Compressor.swift; sourceTree = "<group>"; };
 		FBFF767C10894C3D528921EA8AFA535B /* ASN1DERParsing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASN1DERParsing.swift; path = JOSESwift/Sources/ASN1DERParsing.swift; sourceTree = "<group>"; };
 		FD0CE05D5D076B1B5190EE5DF97FD54E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -487,6 +491,8 @@
 				BAFF65D9E7F0D66A922FAD32E6598836 /* phsasmarthealthcard-dev.azurewebsites.net~v1~trusted~.well-known~issuers.json */,
 				D7E422FDBC8EC8C31AF41A2C6E158B66 /* pvc.service.yukon.ca~issuer */,
 				CD238DBD5F9A5B517D8FB15F042C7DC6 /* pvc.service.yukon.ca~test~issuer */,
+				F9E2BB48273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json */,
+				F9E2BB49273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json */,
 				2942AC5A273C526E00A4A466 /* rules-dev.json */,
 				67313D300B95EF4420AECD117486C29B /* rules.json */,
 				76A87EC980562D6E7E48E76350C967E5 /* rules-test.json */,
@@ -1001,12 +1007,14 @@
 				DAAB2791F62EA57F533E72290A1F4E4E /* phsasmarthealthcard-dev.azurewebsites.net~v1~issuer in Resources */,
 				494E71373D272E03D5C3F01BC5F40CAF /* phsasmarthealthcard-dev.azurewebsites.net~v1~trusted~.well-known~issuers.json in Resources */,
 				38D32D09FC2248465D298A2150A5FE6E /* pvc.service.yukon.ca~issuer in Resources */,
+				F9E2BB4B273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json in Resources */,
 				4C20773FAA5D5A6EF51419FB1C967608 /* pvc.service.yukon.ca~test~issuer in Resources */,
 				034EDAC54DA5331E32C1B2B212CED0D9 /* rules.json in Resources */,
 				C6B5646B476F131FF5345D692729DE76 /* rules-test.json in Resources */,
 				2942AC5B273C526E00A4A466 /* rules-dev.json in Resources */,
 				3DF26FD5733D437A3C0B567D4BBB6125 /* smarthealthcard.phsa.ca~v1~issuer in Resources */,
 				9BC022F18D7DBE18CD7B4C05AB90021F /* smarthealthcard.phsa.ca~v1~trusted~.well-known~issuers.json in Resources */,
+				F9E2BB4A273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
