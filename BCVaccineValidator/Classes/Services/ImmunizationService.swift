@@ -41,9 +41,7 @@ class ImmunizationService {
     }
     
     private func getImmunizationStatus(for payload: DecodedQRPayload, using rulesSet: RuleSet) -> ImmunizationStatus? {
-        guard !payload.isExempt() else {
-            return .Exempt
-        }
+        guard !payload.isExempt() else { return .Exempt }
         let payloadVaxes = payload.vaxes().sorted(by: {
             let date1: Date = $0.occurrenceDateTime?.vaxDate() ?? .distantFuture
             let date2: Date = $1.occurrenceDateTime?.vaxDate() ?? .distantFuture
@@ -55,7 +53,6 @@ class ImmunizationService {
         var winacType = 0
         var minDays: Int? = nil
         var processedDoseDate: Date? = nil
-        
         var lastDoseDate: Date? = nil
         
         for vaccination in payloadVaxes where vaccination.occurrenceDateTime != nil && vaccination.occurrenceDateTime?.vaxDate() != nil {
@@ -128,7 +125,6 @@ class ImmunizationService {
                     return .Partially
                 }
             }
-            
             minDays = vaxRule.minDays?.intValue
             processedDoseDate = occurrenceDate
         }

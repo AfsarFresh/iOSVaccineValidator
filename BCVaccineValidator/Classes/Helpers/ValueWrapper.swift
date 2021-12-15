@@ -32,7 +32,6 @@ internal enum ValueWrapper: Codable, CustomStringConvertible {
             self = .doubleValue(value)
             return
         }
-
         throw DecodingError.typeMismatch(ValueWrapper.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Wrong type for ValueWrapper"))
     }
 
