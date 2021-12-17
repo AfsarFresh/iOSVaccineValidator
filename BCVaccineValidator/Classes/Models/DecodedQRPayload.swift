@@ -143,7 +143,7 @@ public extension DecodedQRPayload {
     func isExempt() -> Bool {
         let conditionalEntries = self.vc.credentialSubject.fhirBundle.entry.filter { $0.resource.resourceType == "Condition" }
         let entriesWithYukonCodingSystem = conditionalEntries.filter { item in
-            item.resource.code?.coding.contains(where: { $0.system?.lowercased() == Constants.JWKSPublic.yukonCodingSystem.lowercased() }) ?? false
+            item.resource.code?.coding.contains(where: { $0.system?.lowercased().contains(Constants.JWKSPublic.yukonCodingSystem.lowercased()) ?? false }) ?? false
         }
         let currentDate = Date()
         var onsetDate = currentDate
