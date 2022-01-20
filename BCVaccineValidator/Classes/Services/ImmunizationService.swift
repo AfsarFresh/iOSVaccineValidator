@@ -140,7 +140,7 @@ class ImmunizationService {
             return true
         }
         let days = currentDoseDate.interval(ofComponent: .day, fromDate: lastDoseDate)
-        return days > minDays
+        return days >= minDays
     }
     
     func intervalPassed(lastDoseDate: Date, dayRequired: Int, intervalRequired: Bool) -> Bool {
