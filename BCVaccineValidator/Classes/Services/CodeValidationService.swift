@@ -41,9 +41,6 @@ class CodeValidationService {
                 guard let status = status else {
                     return completion(CodeValidationResult(status: .InvalidCode, result: nil))
                 }
-                if status == .None {
-                    return completion(CodeValidationResult(status: .InvalidCode, result: nil))
-                }
                 let vaxes = payload.vaxes()
                 var immunizations: [COVIDImmunizationRecord] = []
                 for vax in vaxes {
