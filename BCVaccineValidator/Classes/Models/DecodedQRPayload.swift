@@ -12,6 +12,8 @@ public struct DecodedQRPayload: Codable {
     let iss: String
     let nbf: Double
     let vc: Vc
+    /// Expiration date in seconds from 1970-01-01T00:00:00Z UTC, as specified by RFC 7519
+    let exp: Double?
 }
 
 // MARK: - Vc
@@ -153,5 +155,13 @@ public extension DecodedQRPayload {
             abatementDate = entry.resource.abatementDateTime?.vaxDate() ?? currentDate
             return currentDate >= onsetDate && currentDate <= abatementDate
         }
+    }
+    
+    func isExpired() -> Bool {
+        guard let expSecs = exp else {
+            return false
+        }
+        let expDate = Date(timeIntervalSince1970: TimeInterval(expSecs))
+        return expDate < Date()
     }
 }

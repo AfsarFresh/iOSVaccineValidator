@@ -79,6 +79,21 @@ internal enum ValueWrapper: Codable, CustomStringConvertible {
         return result
     }
 
+    var doubleValue: Double? {
+        var result: Double?
+        switch self {
+        case let .stringValue(value):
+            result = Double(value)
+        case let .intValue(value):
+            result = Double(value)
+        case let .boolValue(value):
+            result = value ? 1 : 0
+        case let .doubleValue(value):
+            result = value
+        }
+        return result
+    }
+    
     var boolValue: Bool? {
         var result: Bool?
         switch self {
