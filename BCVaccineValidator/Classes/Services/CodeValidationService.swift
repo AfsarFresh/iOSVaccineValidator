@@ -56,7 +56,7 @@ class CodeValidationService {
                         }
                     }
                     var provider: String? = nil
-                    if let performer = vax.performer, performer.isEmpty {
+                    if let performer = vax.performer, !performer.isEmpty {
                         provider = performer[0].actor?.display
                     }
                     let lot: String? = vax.lotNumber
@@ -64,7 +64,7 @@ class CodeValidationService {
                 }
                 let result = ScanResultModel(code: code, issueDate: Double(payload.nbf), name: payload.getName(), birthdate: birthdate, status: status, immunizations: immunizations, payload: payload)
                 
-                VerificationService.shared.verify(jwkSigned: compactjws, iss: payload.iss, kid: header.kid) { isVerified in
+                VerificationService.shared.verify(jwkSigned: compactjws, iss: payload.iss.lowercased(), kid: header.kid) { isVerified in
                     guard isVerified else {
                         return completion(CodeValidationResult(status: .ForgedCode, result: nil))
                     }
