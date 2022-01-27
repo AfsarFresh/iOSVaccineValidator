@@ -142,17 +142,38 @@ public extension DecodedQRPayload {
             .compactMap({$0.resource}).filter({$0.resourceType.lowercased() == "Immunization".lowercased()})
     }
     
-    func isExempt() -> Bool {
-        let conditionalEntries = self.vc.credentialSubject.fhirBundle.entry.filter { $0.resource.resourceType == "Condition" }
-        let entriesWithYukonCodingSystem = conditionalEntries.filter { item in
-            item.resource.code?.coding.contains(where: { $0.system?.lowercased().contains(Constants.JWKSPublic.yukonCodingSystem.lowercased()) ?? false }) ?? false
+    internal func isExempt(rulesSet: RuleSet) -> Bool {
+        let conditionalEntries = self.vc.credentialSubject.fhirBundle.entry.filter {
+            $0.resource.resourceType == "Condition"
+        }
+        let yukonApprovedConditionalEntries = conditionalEntries.filter { condition in
+            guard let exemption = rulesSet.exemptions?.first(where: {
+                $0.issuer.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ==
+                    iss.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            }) else {
+                return false
+            }
+            let exemptionCodingSystems = exemption.codingSystems.map {
+                $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            }
+            let qrCodingSystems = condition.resource.code?.coding.compactMap {
+                $0.system?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            } ?? []
+            
+            let exemptionCodes = exemption.codes.map {
+                $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            }
+            let qrExemptionCodes = condition.resource.code?.coding.compactMap {
+                $0.code?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            } ?? []
+            
+            return exemptionCodingSystems.contains(where: qrCodingSystems.contains) &&
+                exemptionCodes.contains(where: qrExemptionCodes.contains)
         }
         let currentDate = Date()
-        var onsetDate = currentDate
-        var abatementDate = currentDate
-        return entriesWithYukonCodingSystem.contains { entry in
-            onsetDate = entry.resource.onsetDateTime?.vaxDate() ?? currentDate
-            abatementDate = entry.resource.abatementDateTime?.vaxDate() ?? currentDate
+        return yukonApprovedConditionalEntries.contains { entry in
+            let onsetDate = entry.resource.onsetDateTime?.vaxDate() ?? currentDate
+            let abatementDate = entry.resource.abatementDateTime?.vaxDate() ?? currentDate
             return currentDate >= onsetDate && currentDate <= abatementDate
         }
     }

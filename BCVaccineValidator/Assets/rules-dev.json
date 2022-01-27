@@ -1,44 +1,113 @@
 {
-  "publishDateTime": "2021-10-19T23:40:29.6568937+00:00",
+  "publishDateTime": "2021-11-29T17:08:22+0000",
   "ruleSet": [
     {
-      "mixTypesAllowed": false,
-      "mixTypesRuRequired": 2,
-      "ruRequired": 2,
-      "intervalRequired": false,
-      "daysSinceLastInterval": 14,
-      "ruleTarget": "https://phsasmarthealthcard-dev.azurewebsites.net/v1/trusted/.well-known/issuers.json",
+      "mixTypesAllowed": true,
+      "mixTypesRuRequired": 3,
+      "ruRequired": 3,
+      "intervalRequired": true,
+      "daysSinceLastInterval": 1,
+      "ruleTarget": "https://pvc.service.yukon.ca/test/v1/verifier/.well-known/issuers.json",
       "version": "V1",
       "vaccinationRules": [
         {
-          "cvxCode": "208",
-          "type": 1,
-          "ru": 1
-        },
-        {
           "cvxCode": "207",
           "type": 1,
-          "ru": 1
+          "ru": 2,
+          "minDays": "28"
         },
+        {
+          "cvxCode": "208",
+          "type": 1,
+          "ru": 2,
+          "minDays": "21"
+        },
+
         {
           "cvxCode": "210",
           "type": 2,
-          "ru": 1
+          "ru": 2,
+          "minDays": "28"
+        },
+        {
+          "cvxCode": "211",
+          "type": 2,
+          "ru": 2,
+          "minDays": "28"
         },
         {
           "cvxCode": "212",
           "type": 2,
-          "ru": 2
+          "ru": 3
         },
         {
-          "cvxCode": "511",
-          "type": 3,
-          "ru": 1
+          "cvxCode": "218",
+          "type": 1,
+          "ru": 2,
+          "minDays": "19"
+        },
+        {
+          "cvxCode": "502",
+          "type": 2,
+          "ru": 2,
+          "minDays": "28"
         },
         {
           "cvxCode": "510",
           "type": 3,
-          "ru": 1
+          "ru": 2,
+          "minDays": "21"
+        },
+        {
+          "cvxCode": "511",
+          "type": 3,
+          "ru": 2,
+          "minDays": "14"
+        }
+      ],
+      "exemptions": [
+        {
+          "issuer": "https://pvc.service.yukon.ca/test/issuer",
+          "codingSystems": [
+            "https://pvc.service.yukon.ca/test/v1/verifier/deferrals.json",
+            "https://pvc.service.yukon.ca/v1/verifier/deferrals.json",
+            "https://pvc.service.yukon.ca/"
+          ],
+          "codes": [
+            "YK-1",
+            "YK-2",
+            "YK-3",
+            "YK-4",
+            "YK-5"
+          ]
+        },
+        {
+          "issuer": "https://pvc.service.yukon.ca/issuer",
+          "codingSystems": [
+            "https://pvc.service.yukon.ca/v1/verifier/deferrals.json"
+          ],
+          "codes": [
+            "YK-1",
+            "YK-2",
+            "YK-3",
+            "YK-4",
+            "YK-5"
+          ]
+        },
+        {
+          "issuer": "https://bcvaxcardgen.freshworks.club",
+          "codingSystems": [
+            "https://pvc.service.yukon.ca/test/v1/verifier/deferrals.json",
+            "https://pvc.service.yukon.ca/v1/verifier/deferrals.json",
+            "https://pvc.service.yukon.ca/"
+          ],
+          "codes": [
+            "YK-1",
+            "YK-2",
+            "YK-3",
+            "YK-4",
+            "YK-5"
+          ]
         }
       ]
     }

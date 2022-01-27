@@ -45,7 +45,7 @@ struct Constants {
             }
         }
         static var prodRules = "https://pvc.service.yukon.ca/v1/verifier/.well-known/rules.json"
-        static var devRules = "https://ds9mwekyyprcy.cloudfront.net/rules.json"
+        static var devRules = "https://ds9mwekyyprcy.cloudfront.net/yk-rules.json"
         static var testRuls = "https://pvc.service.yukon.ca/test/v1/verifier/.well-known/rules.json"
         
         static var rulesURL: String {
@@ -60,7 +60,6 @@ struct Constants {
         }
         
         static let wellKnownJWKS_URLExtension = ".well-known/jwks.json"
-        static let yukonCodingSystem = "pvc.service.yukon.ca"
     }
     
     struct CVX {

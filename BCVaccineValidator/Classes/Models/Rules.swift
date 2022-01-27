@@ -21,6 +21,7 @@ struct RuleSet: Codable {
     let ruleTarget: String
     let version: String
     let vaccinationRules: [VaccinationRule]
+    let exemptions: [Exemption]?
 }
 
 // MARK: - VaccinationRule
@@ -28,6 +29,13 @@ struct VaccinationRule: Codable {
     let cvxCode: String
     let type, ru: Int
     let minDays: ValueWrapper?
+}
+
+// MARK: - Exemption
+struct Exemption: Codable {
+    let issuer: String
+    let codingSystems: [String]
+    let codes: [String]
 }
 
 enum VaccinationType: Int {
