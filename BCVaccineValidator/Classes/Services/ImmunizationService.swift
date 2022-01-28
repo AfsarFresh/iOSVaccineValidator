@@ -41,7 +41,7 @@ class ImmunizationService {
     }
     
     private func getImmunizationStatus(for payload: DecodedQRPayload, using rulesSet: RuleSet) -> ImmunizationStatus? {
-        guard !payload.isExpired() else { return nil }
+        guard !payload.isExpired() else { return .None }
         guard !payload.isExempt(rulesSet: rulesSet) else { return .Exempt }
         let payloadVaxes = payload.vaxes().sorted(by: {
             let date1: Date = $0.occurrenceDateTime?.vaxDate() ?? .distantFuture
