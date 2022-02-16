@@ -72,4 +72,24 @@ class NetworkService {
                 }
             }
     }
+    
+    /// Card Revocation List
+    func getCRL(keyId: String, issuer: String, completion: @escaping (CardRevocationListResponse?, Error?, _ statusCode: Int?) -> Void) {
+        guard ReachabilityService.shared.isReachable else {
+            BCVaccineValidator.shouldUpdateWhenOnline = true
+            return completion(nil, nil, nil)
+        }
+        let urlStr = issuer.removeWellKnownJWKS_URLExtension().addWellKnownCRL_URLExtension(keyId: keyId)
+        AF.request(urlStr, requestModifier: { $0.timeoutInterval = Constants.crlRequestTimeout })
+            .validate(statusCode: 200..<300)
+            .validate(contentType: ["application/json"]) // NO I18N
+            .responseDecodable(of: CardRevocationListResponse.self) { response in
+                switch response.result {
+                case .success(let result):
+                    completion(result, nil, response.response?.statusCode)
+                case .failure(let error):
+                    completion(nil, error, response.response?.statusCode)
+                }
+            }
+    }
 }

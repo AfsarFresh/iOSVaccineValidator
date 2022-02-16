@@ -9,6 +9,7 @@ import Foundation
 
 struct Constants {
     static let networkTimeout: Double = 5
+    static let crlRequestTimeout: Double = 20 // The request may return a large dataset
     
     struct DataExpiery {
         static var defaultIssuersTimeout: Double { // Minutes
@@ -21,6 +22,15 @@ struct Constants {
         }
         
         static var detaultRulesTimeout: Double { // Minutes
+            switch BCVaccineValidator.mode {
+            case .Prod:
+                return 6 * 60 // 6 hours
+            case .Test, .Dev:
+                return 1
+            }
+        }
+        
+        static var revocationsExpiryInMinutes: Double {
             switch BCVaccineValidator.mode {
             case .Prod:
                 return 6 * 60 // 6 hours
@@ -59,7 +69,8 @@ struct Constants {
             }
         }
         
-        static let wellKnownJWKS_URLExtension = ".well-known/jwks.json"
+        static let wellKnownJWKS_URLExtension = ".well-known/jwks.json" // NO I18N
+        static let wellKnownCRL_URLExtensionFormat = ".well-known/crl/%@.json" // NO I18N
     }
     
     struct CVX {

@@ -17,7 +17,12 @@ class VerificationService {
         fetchKeys(for: iss) { keys in
             guard let key = keys.filter({$0.kid == kid}).first else {
                 // if kid is not found, we should re-fetch this issuer's keys
-                KeyManager.shared.downloadKeys(forIssuer: iss, completion: {_ in })
+                KeyManager.shared.downloadKeys(forIssuer: iss, completion: { _ in
+                    RevocationManager.shared.downloadAndCacheCardRevocationListIfNeeded(issuer: iss, completion: { isSuccess in
+                        isSuccess ? Logger.logInfo("downloadAndCacheCardRevocationListIfNeeded: Completion") :
+                        Logger.logFailure("downloadAndCacheCardRevocationListIfNeeded failed")
+                    })
+                })
                 // TODO: Notify user?
                 return completion(false)
             }
@@ -67,7 +72,7 @@ class VerificationService {
             }
             
             // Fetch stored jwks.json from local storage
-            KeyManager.shared.fetchKeys(for: issuer) { result in
+            KeyManager.shared.fetchLocalKeys(issuer: issuer) { result in
                 guard let publicKeys = result else {
                     return completion([])
                 }

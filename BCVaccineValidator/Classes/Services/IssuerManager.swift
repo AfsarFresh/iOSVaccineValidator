@@ -16,7 +16,7 @@ class IssuerManager: DirectoryManager {
         seedOrUpdateIfNeeded()
     }
     
-    public func getIssuers(completion: @escaping(_ issuers: Issuers?)->Void) {
+    public func getIssuers(completion: @escaping(_ issuers: Issuers?) -> Void) {
         seedOrUpdateIfNeeded()
         return completion(fetchLocalIssuers() ?? seedIssuers())
     }

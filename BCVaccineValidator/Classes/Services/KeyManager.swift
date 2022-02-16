@@ -15,6 +15,10 @@ class KeyManager: DirectoryManager {
     init() {
         // Seed if needed
         seedIfneeded(completion: {
+            Logger.logInfo("KeyManager: seedIfneeded: completion") // NO I18N
+            RevocationManager.shared.downloadAndCacheIfNeeded(completion: {
+                Logger.logInfo("RevocationManager: downloadAndCacheIfNeeded: completion") // NO I18N
+            })
         })
     }
     
@@ -26,7 +30,7 @@ class KeyManager: DirectoryManager {
         // Create directory for the issuer (if one doesnt exist already)
         createDirectoryIfDoesntExist(path: issuerPath)
         // Verify that the directory exists - TODO: remove?
-        guard directoryExists(path: issuerPath) else {return false}
+        guard directoryExists(path: issuerPath) else { return false }
         let filePath = issuerPath.appendingPathComponent(KeyManager.jwksFileName)
         do {
             // Convert struct to data
@@ -40,9 +44,9 @@ class KeyManager: DirectoryManager {
         }
     }
     
-    func fetchKeys(for issuer: String, completion: @escaping(_ keys: PublicKeys?) -> Void) {
+    func fetchLocalKeys(issuer: String, completion: @escaping(_ keys: PublicKeys?) -> Void) {
         let issuerPath = getDirectory(for: issuer)
-        guard directoryExists(path: issuerPath) else {return completion(nil)}
+        guard directoryExists(path: issuerPath) else { return completion(nil) }
         let filePath = issuerPath.appendingPathComponent(KeyManager.jwksFileName)
         do {
             // Get data at path

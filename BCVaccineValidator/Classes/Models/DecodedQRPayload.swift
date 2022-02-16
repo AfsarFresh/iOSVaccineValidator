@@ -9,8 +9,8 @@ import Foundation
 
 // MARK: - DecodedQRPayload
 public struct DecodedQRPayload: Codable {
-    let iss: String
-    let nbf: Double
+    let iss: String // Issuer
+    let nbf: Double // not before
     let vc: Vc
     /// Expiration date in seconds from 1970-01-01T00:00:00Z UTC, as specified by RFC 7519
     let exp: Double?
@@ -20,6 +20,7 @@ public struct DecodedQRPayload: Codable {
 public struct Vc: Codable {
     let type: [String]
     let credentialSubject: CredentialSubject
+    let rid: String? // Revocation Id
 }
 
 // MARK: - CredentialSubject

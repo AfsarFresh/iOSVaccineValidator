@@ -77,7 +77,16 @@ extension String {
     func removeWellKnownJWKS_URLExtension() -> String {
         return self.replacingOccurrences(of: "/\(Constants.JWKSPublic.wellKnownJWKS_URLExtension)", with: "")
     }
+    
     func addWellKnownJWKS_URLExtension() -> String {
         return "\(self.removeWellKnownJWKS_URLExtension())/\(Constants.JWKSPublic.wellKnownJWKS_URLExtension)"
+    }
+    
+    func addWellKnownCRL_URLExtension(keyId: String) -> String {
+        if self.hasSuffix("/") { // NO I18N
+            return "\(self)\(String(format: Constants.JWKSPublic.wellKnownCRL_URLExtensionFormat, keyId))"
+        } else {
+            return "\(self)/\(String(format: Constants.JWKSPublic.wellKnownCRL_URLExtensionFormat, keyId))"
+        }
     }
 }
