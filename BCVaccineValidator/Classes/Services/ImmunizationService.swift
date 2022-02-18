@@ -13,12 +13,13 @@ class ImmunizationService {
     /// Returns the immunization status of the given payload
     /// - Parameters:
     ///   - payload: SMART QR card payload
+    ///   - kId: Identifier of the key that signed the QR
     ///   - completion: Fully || Partially || None. if nil, no rules could be found for issuer.
-    public func immunizationStatus(payload: DecodedQRPayload, completion: @escaping(_ status: ImmunizationStatus?) -> Void) {
+    public func immunizationStatus(payload: DecodedQRPayload, kId: String, completion: @escaping(_ status: ImmunizationStatus?) -> Void) {
         if BCVaccineValidator.enableRemoteRules {
             RulesManager.shared.getRulesFor(iss: payload.iss) { [weak self] result in
                 guard let `self` = self, let rules = result else { return completion(nil)}
-                completion(self.getImmunizationStatus(for: payload, using: rules))
+                completion(self.getImmunizationStatus(for: payload, using: rules, kId: kId))
             }
         } else {
             return completion(immunizationStatus(payload: payload))
@@ -40,8 +41,13 @@ class ImmunizationService {
       }
     }
     
-    private func getImmunizationStatus(for payload: DecodedQRPayload, using rulesSet: RuleSet) -> ImmunizationStatus? {
+    private func getImmunizationStatus(for payload: DecodedQRPayload, using rulesSet: RuleSet, kId: String) -> ImmunizationStatus? {
         guard !payload.isExpired() else { return .None }
+        if let rId = payload.vc.rid {
+            guard !RevocationManager.shared.isPvcRevoked(issuer: payload.iss, issueDate: Date(timeIntervalSince1970: payload.nbf), rId: rId, kId: kId) else {
+                return .None
+            }
+        }
         guard !payload.isExempt(rulesSet: rulesSet) else { return .Exempt }
         let payloadVaxes = payload.vaxes().sorted(by: {
             let date1: Date = $0.occurrenceDateTime?.vaxDate() ?? .distantFuture

@@ -7,11 +7,9 @@
 
 import Foundation
 
-protocol DirectoryManager {}
+protocol DirectoryManager { }
 
 extension DirectoryManager {
-
-    // MARK: Private fuctions
     func createDirectoryIfDoesntExist(path: URL) {
         guard !directoryExists(path: path) else {return}
         do {

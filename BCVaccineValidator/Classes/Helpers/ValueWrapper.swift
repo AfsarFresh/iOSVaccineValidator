@@ -8,7 +8,7 @@
 import Foundation
 
 /// For the purpose of encoding and decoding. Prevents JSONDecoder from failing. Solves the problem when an REST API returns different data types for the same key at different endpoints or scenarios.
-internal enum ValueWrapper: Codable, CustomStringConvertible {
+internal enum ValueWrapper: Codable {
     case stringValue(String)
     case intValue(Int)
     case doubleValue(Double)
@@ -107,10 +107,5 @@ internal enum ValueWrapper: Codable, CustomStringConvertible {
             result = Bool(truncating: value as NSNumber)
         }
         return result
-    }
-    
-    // MARK: CustomStringConvertible Conformance
-    public var description: String {
-        return self.rawValue
     }
 }

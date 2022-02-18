@@ -14,4 +14,5 @@ struct PublicKeys: Codable {
 struct Key: Codable {
     let kty, kid, use, alg: String
     let crv, x, y: String
+    let ctr: ValueWrapper?
 }

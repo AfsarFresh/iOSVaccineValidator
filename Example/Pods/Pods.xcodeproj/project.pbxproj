@@ -149,11 +149,18 @@
 		F5D2A31C7EB1DE010771140B6E7ABAD8 /* URLEncodedFormEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061CA32F9FD1777A99FF90CD95074B92 /* URLEncodedFormEncoder.swift */; };
 		F63BE0585331CAA3482EF736803F8243 /* RequestInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = E518C903BEBB65F8993A5AA8209F9A63 /* RequestInterceptor.swift */; };
 		F72F82A000CEC1226BD6D7EF2A95C50D /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F542A374C7959D289C3DB171155EEB7A /* HMAC.swift */; };
+		F902DDA627BD90C800507C51 /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = F902DDA527BD90C800507C51 /* SynchronizedArray.swift */; };
 		F91C0E627B2E533164B88C16F9572E89 /* Rules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5303B30D3813D021E5E26F026E68CE58 /* Rules.swift */; };
 		F99B64E8276A6FDE006479D7 /* ValueWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99B64E7276A6FDE006479D7 /* ValueWrapper.swift */; };
 		F9AE2D2D8C6BB8FE6CFAD1BD864F5625 /* BCVaccineValidator-BCVaccineValidator in Resources */ = {isa = PBXBuildFile; fileRef = EA2679D10A6EBBC1F9509B5DA90E5897 /* BCVaccineValidator-BCVaccineValidator */; };
 		F9E2BB4A273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json in Resources */ = {isa = PBXBuildFile; fileRef = F9E2BB48273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json */; };
 		F9E2BB4B273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json in Resources */ = {isa = PBXBuildFile; fileRef = F9E2BB49273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json */; };
+		F9FAAFCF27BBCC250071FFE6 /* RevocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FAAFCE27BBCC250071FFE6 /* RevocationManager.swift */; };
+		F9FAAFD327BBE2AD0071FFE6 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FAAFD227BBE2AD0071FFE6 /* SynchronizedDictionary.swift */; };
+		F9FAAFD527BBE35A0071FFE6 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FAAFD427BBE35A0071FFE6 /* Logger.swift */; };
+		F9FAAFD727BBE4700071FFE6 /* DateFormatter+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FAAFD627BBE4700071FFE6 /* DateFormatter+Ext.swift */; };
+		F9FAAFD927BBE61E0071FFE6 /* SynchronizedSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FAAFD827BBE61E0071FFE6 /* SynchronizedSet.swift */; };
+		F9FAAFDB27BC0B7B0071FFE6 /* CardRevocationListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9FAAFDA27BC0B7B0071FFE6 /* CardRevocationListResponse.swift */; };
 		FE7090208050F2249644E21073689D0F /* Decrypter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF81F4DCF1BC71F190ABBCFCE80522B /* Decrypter.swift */; };
 		FEDBAD32E2EDA85AD6E362B82892A74A /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFA7DAB178CB0710F329A313F88336AA /* Alamofire.swift */; };
 /* End PBXBuildFile section */
@@ -386,9 +393,16 @@
 		F67EBD47880FBEC9FB83B761A3EBF17E /* BCVaccineValidator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = BCVaccineValidator.debug.xcconfig; sourceTree = "<group>"; };
 		F7BADA063C307EEA11E1B92B664562E2 /* Deserializer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deserializer.swift; path = JOSESwift/Sources/Deserializer.swift; sourceTree = "<group>"; };
 		F8160B05B68D0C4F38478EB8F93E0684 /* JOSESwift-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "JOSESwift-Info.plist"; sourceTree = "<group>"; };
+		F902DDA527BD90C800507C51 /* SynchronizedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedArray.swift; sourceTree = "<group>"; };
 		F99B64E7276A6FDE006479D7 /* ValueWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueWrapper.swift; sourceTree = "<group>"; };
 		F9E2BB48273DC36200734E85 /* pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json"; path = "BCVaccineValidator/Assets/pvc.service.yukon.ca~test~v1~verifier~.well-known~issuers.json"; sourceTree = "<group>"; };
 		F9E2BB49273DC36200734E85 /* pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json"; path = "BCVaccineValidator/Assets/pvc.service.yukon.ca~v1~verifier~.well-known~issuers.json"; sourceTree = "<group>"; };
+		F9FAAFCE27BBCC250071FFE6 /* RevocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevocationManager.swift; sourceTree = "<group>"; };
+		F9FAAFD227BBE2AD0071FFE6 /* SynchronizedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedDictionary.swift; sourceTree = "<group>"; };
+		F9FAAFD427BBE35A0071FFE6 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		F9FAAFD627BBE4700071FFE6 /* DateFormatter+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Ext.swift"; sourceTree = "<group>"; };
+		F9FAAFD827BBE61E0071FFE6 /* SynchronizedSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedSet.swift; sourceTree = "<group>"; };
+		F9FAAFDA27BC0B7B0071FFE6 /* CardRevocationListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRevocationListResponse.swift; sourceTree = "<group>"; };
 		FB06026C8E1AF3E465C4F9CC390C43BB /* Compressor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Compressor.swift; path = JOSESwift/Sources/Compressor.swift; sourceTree = "<group>"; };
 		FBFF767C10894C3D528921EA8AFA535B /* ASN1DERParsing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ASN1DERParsing.swift; path = JOSESwift/Sources/ASN1DERParsing.swift; sourceTree = "<group>"; };
 		FD0CE05D5D076B1B5190EE5DF97FD54E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -501,6 +515,7 @@
 				600162E1CB57DD5DF32D8F85565FBF86 /* smarthealthcard.phsa.ca~v1~issuer */,
 				3FEBACD87F6AFAF312C1A34458F7E9EA /* smarthealthcard.phsa.ca~v1~trusted~.well-known~issuers.json */,
 				79D6711B1F7D35E19B84AC45C482D448 /* Constants */,
+				F9FAAFD127BBE2140071FFE6 /* CustomTypes */,
 				6DFD56CE8BE65147C9D21554FB735A0B /* Helpers */,
 				88BC6084A0EA7A7210EEB34D2E8143F1 /* Models */,
 				25186A8A652CD8DF9ABBC8ADD9B0C8FC /* Pod */,
@@ -527,9 +542,11 @@
 				1F90769F83883EF982B691C9646CA81A /* Compressor.swift */,
 				F05DF1EAB3C3EC462BC25855AFE9EFEB /* DataExtension.swift */,
 				3314FEBFC0265B375C25C5E3CA16303D /* DateExtension.swift */,
-				6DDEAD769409D522EADD7B3BBCFB262E /* NotificationExtension.swift */,
+				F9FAAFD627BBE4700071FFE6 /* DateFormatter+Ext.swift */,
 				81101F572FD6438D18893EBC1B7919B7 /* StringExtension.swift */,
 				293643052745809F001A3BBA /* EncodableExtension.swift */,
+				F9FAAFD427BBE35A0071FFE6 /* Logger.swift */,
+				6DDEAD769409D522EADD7B3BBCFB262E /* NotificationExtension.swift */,
 				F99B64E7276A6FDE006479D7 /* ValueWrapper.swift */,
 			);
 			name = Helpers;
@@ -564,6 +581,7 @@
 		88BC6084A0EA7A7210EEB34D2E8143F1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F9FAAFDA27BC0B7B0071FFE6 /* CardRevocationListResponse.swift */,
 				C07ABB229DFD4F128E07B233F62BCE9B /* CodeValidationResult.swift */,
 				40AF24776C51F7BF8A09BB635BB6D05E /* DecodedQRPayload.swift */,
 				04A8421DCD2F51A1666D730FFB62A602 /* Issuers.swift */,
@@ -720,6 +738,7 @@
 				4F6D70EF741773FFA03C68BF4465E780 /* ReachabilityService.swift */,
 				8BA67C28BCFCE49F9C6B32C2CE37E0A6 /* RulesManager.swift */,
 				0C12BF05AF2CE138CD03F9CE66443A81 /* VerificationService.swift */,
+				F9FAAFCE27BBCC250071FFE6 /* RevocationManager.swift */,
 			);
 			name = Services;
 			path = BCVaccineValidator/Classes/Services;
@@ -797,6 +816,17 @@
 			);
 			name = "Support Files";
 			path = "../Target Support Files/Alamofire";
+			sourceTree = "<group>";
+		};
+		F9FAAFD127BBE2140071FFE6 /* CustomTypes */ = {
+			isa = PBXGroup;
+			children = (
+				F902DDA527BD90C800507C51 /* SynchronizedArray.swift */,
+				F9FAAFD227BBE2AD0071FFE6 /* SynchronizedDictionary.swift */,
+				F9FAAFD827BBE61E0071FFE6 /* SynchronizedSet.swift */,
+			);
+			name = CustomTypes;
+			path = BCVaccineValidator/Classes/CustomTypes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1065,17 +1095,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				47E98F55E0C716D8E0B2274EDF98C2BD /* ArrayExtension.swift in Sources */,
+				F9FAAFD327BBE2AD0071FFE6 /* SynchronizedDictionary.swift in Sources */,
 				024D65E60682350825A8B163742408ED /* BCVaccineValidator.swift in Sources */,
 				2C95FB78DA4884DB7EB073C68CADCC13 /* BCVaccineValidator-dummy.m in Sources */,
+				F9FAAFD927BBE61E0071FFE6 /* SynchronizedSet.swift in Sources */,
 				1F831C908216274D91B2FF063537A20F /* CodeValidationResult.swift in Sources */,
+				F9FAAFD527BBE35A0071FFE6 /* Logger.swift in Sources */,
 				3719BAC538A286A2D24CC4916C0F0A04 /* CodeValidationService.swift in Sources */,
 				18DDBFAD977CD609D19C9489A92DD7D4 /* Compressor.swift in Sources */,
 				35438275E84FF5815D8FC483445B538C /* Constants.swift in Sources */,
 				AC675EB3EA7FD46BE9CDB23FB064EA99 /* DataExtension.swift in Sources */,
 				293643062745809F001A3BBA /* EncodableExtension.swift in Sources */,
 				F99B64E8276A6FDE006479D7 /* ValueWrapper.swift in Sources */,
+				F902DDA627BD90C800507C51 /* SynchronizedArray.swift in Sources */,
 				175B56F06971822ECAC53D37BD418B51 /* DateExtension.swift in Sources */,
 				42EAD83697CB25B8E4D4E680461B3CCE /* DecodedQRPayload.swift in Sources */,
+				F9FAAFCF27BBCC250071FFE6 /* RevocationManager.swift in Sources */,
 				F297F28111FF272F94FF159D44A0B852 /* DirectoryManager.swift in Sources */,
 				C52B3C997B6FBE93EE40F0E92243C343 /* ImmunizationService.swift in Sources */,
 				49CAD6D62F3D2023A65EA257F3D4C319 /* IssuerManager.swift in Sources */,
@@ -1085,8 +1120,10 @@
 				AF626F998D8A1B87D53CB0CF14157E55 /* NetworkService.swift in Sources */,
 				E3A0BBA83461BA1BC44A2014216E1F20 /* NotificationExtension.swift in Sources */,
 				387046D278E383E78613784D01AB3EE3 /* QRHeader.swift in Sources */,
+				F9FAAFDB27BC0B7B0071FFE6 /* CardRevocationListResponse.swift in Sources */,
 				E8FF23795F1DE692CC05886C2DA38607 /* ReachabilityService.swift in Sources */,
 				F91C0E627B2E533164B88C16F9572E89 /* Rules.swift in Sources */,
+				F9FAAFD727BBE4700071FFE6 /* DateFormatter+Ext.swift in Sources */,
 				58875C5D65EAAA39738F221DFC9C2039 /* RulesManager.swift in Sources */,
 				C2FC49F9418B1380910C93F7B0B1A413 /* StringExtension.swift in Sources */,
 				8248E8FD96F08F7CD409B47BF4851835 /* VerificationService.swift in Sources */,

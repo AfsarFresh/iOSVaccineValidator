@@ -30,9 +30,15 @@ public class BCVaccineValidator {
         print("Enable Remote rules: \(BCVaccineValidator.enableRemoteRules)")
 #endif
         loadData { [weak self] in
-            guard let `self` = self, BCVaccineValidator.enableRemoteRules else {return}
-            self.setupReachabilityListener()
-            self.setupUpdateListener()
+            guard let `self` = self else { return }
+            // Revocations were added at a later point in time. The below invocation ensures that we fetch in the CRL when we have unexpired cache of public keys.
+            RevocationManager.shared.downloadAndCacheIfNeeded(completion: {
+                Logger.logInfo("RevocationManager: downloadAndCacheIfNeeded: completion") // NO I18N
+            })
+            if BCVaccineValidator.enableRemoteRules {
+                self.setupReachabilityListener()
+                self.setupUpdateListener()
+            }
         }
 #if DEBUG
         print("\n\nBundled Files: \n")
@@ -51,17 +57,17 @@ public class BCVaccineValidator {
     }
     
     private func loadData(completion: @escaping()->Void) {
-        let displatchGroup = DispatchGroup()
-        displatchGroup.enter()
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
         IssuerManager.shared.getIssuers { issuers in
-            displatchGroup.leave()
+            dispatchGroup.leave()
         }
-        displatchGroup.enter()
+        dispatchGroup.enter()
         RulesManager.shared.getRules { rules in
-            displatchGroup.leave()
+            dispatchGroup.leave()
         }
         
-        displatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue: .main) {
             return completion()
         }
     }
@@ -106,8 +112,13 @@ public class BCVaccineValidator {
         Notification.Name.issuersUpdated.onPost(object: nil, queue: .main) { _ in
             IssuerManager.shared.getIssuers(completion: { res in
                 if let issuers = res {
-                    let issuerURLs = issuers.participatingIssuers.map({$0.iss})
-                    KeyManager.shared.downloadKeys(forIssuers: issuerURLs, completion: {})
+                    let issuerURLs = issuers.participatingIssuers.map({ $0.iss })
+                    KeyManager.shared.downloadKeys(forIssuers: issuerURLs, completion: {
+                        Logger.logInfo("KeyManager: downloadKeys: completion") // NO I18N
+                        RevocationManager.shared.downloadAndCacheIfNeeded(completion: {
+                            Logger.logInfo("RevocationManager: downloadAndCacheIfNeeded: completion") // NO I18N
+                        })
+                    })
                 }
             })
         }

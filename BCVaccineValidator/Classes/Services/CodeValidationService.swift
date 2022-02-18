@@ -37,7 +37,7 @@ class CodeValidationService {
             }
             
             let immunizationService = ImmunizationService()
-            immunizationService.immunizationStatus(payload: payload, completion: { status in
+            immunizationService.immunizationStatus(payload: payload, kId: header.kid, completion: { status in
                 guard let status = status else {
                     return completion(CodeValidationResult(status: .InvalidCode, result: nil))
                 }
