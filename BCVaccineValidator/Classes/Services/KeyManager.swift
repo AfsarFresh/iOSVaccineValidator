@@ -69,30 +69,30 @@ class KeyManager: DirectoryManager {
                 return completion()
             }
             let storedKeys = self.fetchAllKeys(forIssuers: issuers.participatingIssuers)
-            let displatchGroup = DispatchGroup()
+            let dispatchGroup = DispatchGroup()
             for issuer in issuers.participatingIssuers where storedKeys?[issuer.iss] == nil {
-                displatchGroup.enter()
+                dispatchGroup.enter()
                 self.seed(issuer: issuer.iss, completion: {
-                    displatchGroup.leave()
+                    dispatchGroup.leave()
                 })
             }
             
-            displatchGroup.notify(queue: .main) {
+            dispatchGroup.notify(queue: .main) {
                 return completion()
             }
         }
     }
     
     public func downloadKeys(forIssuers issuers: [String], completion: @escaping () -> Void) {
-        let displatchGroup = DispatchGroup()
+        let dispatchGroup = DispatchGroup()
         for issuer in issuers {
-            displatchGroup.enter()
+            dispatchGroup.enter()
             self.downloadKeys(forIssuer: issuer) { _ in
-                displatchGroup.leave()
+                dispatchGroup.leave()
             }
         }
         
-        displatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue: .main) {
             return completion()
         }
     }

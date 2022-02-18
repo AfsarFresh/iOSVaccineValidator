@@ -57,17 +57,17 @@ public class BCVaccineValidator {
     }
     
     private func loadData(completion: @escaping()->Void) {
-        let displatchGroup = DispatchGroup()
-        displatchGroup.enter()
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
         IssuerManager.shared.getIssuers { issuers in
-            displatchGroup.leave()
+            dispatchGroup.leave()
         }
-        displatchGroup.enter()
+        dispatchGroup.enter()
         RulesManager.shared.getRules { rules in
-            displatchGroup.leave()
+            dispatchGroup.leave()
         }
         
-        displatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue: .main) {
             return completion()
         }
     }

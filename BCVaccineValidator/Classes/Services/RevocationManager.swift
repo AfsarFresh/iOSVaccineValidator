@@ -55,16 +55,16 @@ internal extension RevocationManager {
                 Logger.logFailure("Critical Error: No issuers found") // NO I18N
                 return completion()
             }
-            let displatchGroup = DispatchGroup()
+            let dispatchGroup = DispatchGroup()
             issuers.participatingIssuers.forEach { issuer in
-                displatchGroup.enter()
+                dispatchGroup.enter()
                 self.downloadAndCacheCardRevocationListIfNeeded(issuer: issuer.iss, completion: { isSuccess in
                     isSuccess ? Logger.logInfo("downloadAndCacheCardRevocationListIfNeeded: iss: \(issuer.iss); Completion") : // NO I18N
                     Logger.logFailure("downloadAndCacheCardRevocationListIfNeeded: iss: \(issuer.iss); failed") // NO I18N
-                    displatchGroup.leave()
+                    dispatchGroup.leave()
                 })
             }
-            displatchGroup.notify(queue: .main) {
+            dispatchGroup.notify(queue: .main) {
                 completion()
             }
         }
@@ -72,15 +72,15 @@ internal extension RevocationManager {
     
     // Example -> issuer: https://pvc.service.yukon.ca/issuer"
     func downloadAndCacheCardRevocationListIfNeeded(issuer: String, completion: @escaping (_ success: Bool) -> Void) {
-        let displatchGroup = DispatchGroup()
+        let dispatchGroup = DispatchGroup()
         var isSuccess = true
-        displatchGroup.enter()
+        dispatchGroup.enter()
         KeyManager.shared.fetchLocalKeys(issuer: issuer, completion: { [weak self] result in
-            displatchGroup.leave()
+            dispatchGroup.leave()
             guard let self = self, let keysResult = result else { return }
             self.removeUnnecessaryCache(issuer: issuer, keys: keysResult.keys)
             for key in keysResult.keys {
-                displatchGroup.enter()
+                dispatchGroup.enter()
                 self.downloadAndCacheCardRevocationListIfNeeded(issuer: issuer, key: key, completion: {
                     if let error = $0 {
                         isSuccess = false
@@ -88,11 +88,11 @@ internal extension RevocationManager {
                     } else {
                         Logger.logInfo("Completion: issuer: \(issuer); keyId: \(key.kid);") // NO I18N
                     }
-                    displatchGroup.leave()
+                    dispatchGroup.leave()
                 })
             }
         })
-        displatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue: .main) {
             completion(isSuccess)
         }
     }

@@ -123,10 +123,10 @@ class RulesManager: DirectoryManager {
     }
     
     private func store(rulesTargets: [String]) {
-        let displatchGroup = DispatchGroup()
+        let dispatchGroup = DispatchGroup()
         
         for ruleTarget in rulesTargets where !ruleTarget.contains(Constants.JWKSPublic.wellKnownJWKS_URLExtension) {
-            displatchGroup.enter()
+            dispatchGroup.enter()
             var bundledFileURL: URL? = nil
             if let bundledFilePath = BCVaccineValidator.resourceBundle.url(forResource: ruleTarget.filePathSafeName(), withExtension: "") {
                 bundledFileURL = bundledFilePath
@@ -159,7 +159,7 @@ class RulesManager: DirectoryManager {
             }
         }
         
-        displatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue: .main) {
             return
         }
     }
