@@ -59,10 +59,7 @@ class VerificationService {
     ///   - completion: array of keys
     private func fetchKeys(for issuer: String, completion: @escaping(_ keys: [Key]) -> Void) {
         // Get list of allowed issuers
-        IssuerManager.shared.getIssuers { issuers in
-            guard let issuers = issuers else {
-                return completion([])
-            }
+        if let issuers = IssuerManager.shared.getIssuers() {
             let allowedIssuers: [String] = issuers.participatingIssuers.map({$0.iss.removeWellKnownJWKS_URLExtension().lowercased()})
             
             // Verify that the issuer is allowed
@@ -79,6 +76,8 @@ class VerificationService {
                 // return keys
                 return completion(publicKeys.keys)
             }
+        } else {
+            return completion([])
         }
     }
 

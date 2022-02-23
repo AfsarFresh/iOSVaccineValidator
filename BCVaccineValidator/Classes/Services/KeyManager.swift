@@ -60,14 +60,9 @@ class KeyManager: DirectoryManager {
         }
     }
     
-    private func seedIfneeded(completion: @escaping ()->Void) {
+    private func seedIfneeded(completion: @escaping () -> Void) {
         // Get list of issuers
-        IssuerManager.shared.getIssuers { result in
-            guard let issuers = result else {
-                // It is highly unlikely that result is nil.
-                print("Critical Error: No issuers found")
-                return completion()
-            }
+        if let issuers = IssuerManager.shared.getIssuers() {
             let storedKeys = self.fetchAllKeys(forIssuers: issuers.participatingIssuers)
             let dispatchGroup = DispatchGroup()
             for issuer in issuers.participatingIssuers where storedKeys?[issuer.iss] == nil {
@@ -80,6 +75,10 @@ class KeyManager: DirectoryManager {
             dispatchGroup.notify(queue: .main) {
                 return completion()
             }
+        } else {
+            // It is highly unlikely that result is nil.
+            print("Critical Error: No issuers found")
+            return completion()
         }
     }
     
@@ -99,11 +98,10 @@ class KeyManager: DirectoryManager {
     
     public func downloadKeys(forIssuer issuer: String, completion: @escaping (Bool) -> Void) {
         // Before downloading, verify that issuer is allowed
-        IssuerManager.shared.getIssuers { result in
-            guard
-                let issuers = result,
-                issuers.participatingIssuers.map({$0.iss}).contains(issuer)
-            else {return completion(false)}
+        if let issuers = IssuerManager.shared.getIssuers() {
+            guard issuers.participatingIssuers.map({ $0.iss }).contains(issuer) else {
+                completion(false); return
+            }
             // Download data
             let network = NetworkService()
             network.getJWKS(forIssuer: issuer) { result in
@@ -116,6 +114,8 @@ class KeyManager: DirectoryManager {
                 Notification.Name.keysUpdated.post()
                 return completion(true)
             }
+        } else {
+            completion(false)
         }
     }
     

@@ -29,23 +29,20 @@ public class BCVaccineValidator {
         print("Initialized BCVaccineValidator in \(BCVaccineValidator.mode)")
         print("Enable Remote rules: \(BCVaccineValidator.enableRemoteRules)")
 #endif
-        loadData { [weak self] in
-            guard let `self` = self else { return }
-            // Revocations were added at a later point in time. The below invocation ensures that we fetch in the CRL when we have unexpired cache of public keys.
-            RevocationManager.shared.downloadAndCacheIfNeeded(completion: {
-                Logger.logInfo("RevocationManager: downloadAndCacheIfNeeded: completion") // NO I18N
-            })
-            if BCVaccineValidator.enableRemoteRules {
-                self.setupReachabilityListener()
-                self.setupUpdateListener()
-            }
+        loadData()
+        // Revocations were added at a later point in time. The below invocation ensures that we fetch in the CRL when we have unexpired cache of public keys.
+        RevocationManager.shared.downloadAndCacheIfNeeded(completion: {
+            Logger.logInfo("RevocationManager: downloadAndCacheIfNeeded: completion") // NO I18N
+        })
+        if BCVaccineValidator.enableRemoteRules {
+            self.setupReachabilityListener()
+            self.setupUpdateListener()
         }
 #if DEBUG
         print("\n\nBundled Files: \n")
         if let files = try? FileManager.default.contentsOfDirectory(atPath: BCVaccineValidator.resourceBundle.bundlePath){
             for file in files {
-                
-                print(file)
+                Logger.logInfo("file: \(file)") // NO I18N
             }
         }
         print("\n\n")
@@ -56,19 +53,35 @@ public class BCVaccineValidator {
 #endif
     }
     
-    private func loadData(completion: @escaping()->Void) {
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        IssuerManager.shared.getIssuers { issuers in
-            dispatchGroup.leave()
-        }
-        dispatchGroup.enter()
-        RulesManager.shared.getRules { rules in
-            dispatchGroup.leave()
+    private func loadData() {
+        let getIssuersAndRules = {
+            _ = RulesManager.shared.getRules()
+            _ = IssuerManager.shared.getIssuers()
         }
         
-        dispatchGroup.notify(queue: .main) {
-            return completion()
+        if BCVaccineValidator.enableRemoteRules {
+            if let _ = RulesManager.shared.fetchLocalRules(),
+               let rules = RulesManager.shared.getRulesFor(iss: Constants.JWKSPublic.issuer, shouldFallbackToHostForGlobalIssuer: false),
+               rules.cache != nil {
+                // Locally saved 'cache' object is present.
+                getIssuersAndRules()
+            } else {
+                getIssuersAndRules() // This ensures we seed necessary data irrespective of 'downloadAndUpdateRules' invocations' result.
+                // 'cache' object is not available.
+                // 'cache' object was added at a later point in time. The below request ensures we fetch it.
+                RulesManager.shared.downloadAndUpdateRules(completion: { _ in
+                    if let issuers = IssuerManager.shared.getIssuers() {
+                        // This ensures we update the issuers' cache expiry interval from backend
+                        IssuerManager.shared.updatedIssuers(issuers: issuers, expiresInMinutes: RulesManager.shared.getIssuersCacheExpiryIntervalInMinutes())
+                    }
+                    // This ensures we update the revocations' based on the cache expiry interval from backend
+                    RevocationManager.shared.downloadAndCacheIfNeeded {
+                        Logger.logInfo("RevocationManager downloadAndCacheIfNeeded completion") // NO I18N
+                    }
+                })
+            }
+        } else {
+            getIssuersAndRules()
         }
     }
     
@@ -110,17 +123,15 @@ public class BCVaccineValidator {
     private func setupUpdateListener() {
         // When issuers list is updated, re-download keys for issuers
         Notification.Name.issuersUpdated.onPost(object: nil, queue: .main) { _ in
-            IssuerManager.shared.getIssuers(completion: { res in
-                if let issuers = res {
-                    let issuerURLs = issuers.participatingIssuers.map({ $0.iss })
-                    KeyManager.shared.downloadKeys(forIssuers: issuerURLs, completion: {
-                        Logger.logInfo("KeyManager: downloadKeys: completion") // NO I18N
-                        RevocationManager.shared.downloadAndCacheIfNeeded(completion: {
-                            Logger.logInfo("RevocationManager: downloadAndCacheIfNeeded: completion") // NO I18N
-                        })
+            if let issuers = IssuerManager.shared.getIssuers() {
+                let issuerURLs = issuers.participatingIssuers.map({ $0.iss })
+                KeyManager.shared.downloadKeys(forIssuers: issuerURLs, completion: {
+                    Logger.logInfo("KeyManager: downloadKeys: completion") // NO I18N
+                    RevocationManager.shared.downloadAndCacheIfNeeded(completion: {
+                        Logger.logInfo("RevocationManager: downloadAndCacheIfNeeded: completion") // NO I18N
                     })
-                }
-            })
+                })
+            }
         }
     }
     
@@ -130,8 +141,13 @@ public class BCVaccineValidator {
     private func setupReachabilityListener() {
         Notification.Name.isReachable.onPost(object: nil, queue: .main) { _ in
             if BCVaccineValidator.shouldUpdateWhenOnline {
-                IssuerManager.shared.updateIssuers()
-                RulesManager.shared.updateRules()
+                RulesManager.shared.downloadAndUpdateRules(completion: { _ in
+                    Logger.logInfo("RulesManager downloadAndUpdateRules completion") // NO I18N
+                    IssuerManager.shared.updateIssuers()
+                    RevocationManager.shared.downloadAndCacheIfNeeded {
+                        Logger.logInfo("RevocationManager downloadAndCacheIfNeeded completion") // NO I18N
+                    }
+                })
             }
         }
     }

@@ -22,6 +22,7 @@ struct RuleSet: Codable {
     let version: String
     let vaccinationRules: [VaccinationRule]
     let exemptions: [Exemption]?
+    let cache: CacheExpiry?
 }
 
 // MARK: - VaccinationRule
@@ -43,4 +44,14 @@ enum VaccinationType: Int {
     case Mrna = 1
     case NRVV = 2
     case WInac = 3
+}
+
+struct CacheExpiry: Codable {
+    let expiry: Interval
+    
+    struct Interval: Codable {
+        let rules: Double // Minutes
+        let issuers: Double // Minutes
+        let revocations: Double // Minutes
+    }
 }

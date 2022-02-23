@@ -17,12 +17,12 @@ class ImmunizationService {
     ///   - completion: Fully || Partially || None. if nil, no rules could be found for issuer.
     public func immunizationStatus(payload: DecodedQRPayload, kId: String, completion: @escaping(_ status: ImmunizationStatus?) -> Void) {
         if BCVaccineValidator.enableRemoteRules {
-            RulesManager.shared.getRulesFor(iss: payload.iss) { [weak self] result in
-                guard let `self` = self, let rules = result else { return completion(nil)}
-                completion(self.getImmunizationStatus(for: payload, using: rules, kId: kId))
+            guard let rules = RulesManager.shared.getRulesFor(iss: payload.iss, shouldFallbackToHostForGlobalIssuer: false) else {
+                return completion(nil)
             }
+            completion(self.getImmunizationStatus(for: payload, using: rules, kId: kId))
         } else {
-            return completion(immunizationStatus(payload: payload))
+            completion(immunizationStatus(payload: payload))
         }
     }
     
