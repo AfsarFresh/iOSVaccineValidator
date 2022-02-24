@@ -11,7 +11,7 @@ struct Constants {
     static let networkTimeout: Double = 5
     static let crlRequestTimeout: Double = 20 // The request may return a large dataset
     
-    struct DataExpiery {
+    struct DataExpiry {
         static var defaultIssuersTimeout: Double { // Minutes
             switch BCVaccineValidator.mode {
             case .Prod:
@@ -30,7 +30,7 @@ struct Constants {
             }
         }
         
-        static var revocationsExpiryInMinutes: Double {
+        static var defaultRevocationsExpiryInMinutes: Double {
             switch BCVaccineValidator.mode {
             case .Prod:
                 return 6 * 60 // 6 hours
@@ -54,6 +54,22 @@ struct Constants {
                 return devIssuers
             }
         }
+        
+        private static let prodIssuer = "https://pvc.service.yukon.ca/issuer"
+        private static let testIssuer = "https://pvc.service.yukon.ca/test/issuer"
+        private static let devIssuer = "https://pvc.service.yukon.ca/test/issuer"
+        
+        static var issuer: String {
+            switch BCVaccineValidator.mode {
+            case .Prod:
+                return prodIssuer
+            case .Test:
+                return testIssuer
+            case .Dev:
+                return devIssuer
+            }
+        }
+        
         static var prodRules = "https://pvc.service.yukon.ca/v1/verifier/.well-known/rules.json"
         static var devRules = "https://ds9mwekyyprcy.cloudfront.net/yk-rules.json"
         static var testRuls = "https://pvc.service.yukon.ca/test/v1/verifier/.well-known/rules.json"

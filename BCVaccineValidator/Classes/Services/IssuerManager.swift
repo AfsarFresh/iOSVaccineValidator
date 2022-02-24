@@ -16,9 +16,9 @@ class IssuerManager: DirectoryManager {
         seedOrUpdateIfNeeded()
     }
     
-    public func getIssuers(completion: @escaping(_ issuers: Issuers?) -> Void) {
+    func getIssuers() -> Issuers? {
         seedOrUpdateIfNeeded()
-        return completion(fetchLocalIssuers() ?? seedIssuers())
+        return fetchLocalIssuers() ?? seedIssuers()
     }
     
     private func seedOrUpdateIfNeeded() {
@@ -40,7 +40,7 @@ class IssuerManager: DirectoryManager {
     }
     
     func updateIssuers() {
-        if isUpdating || !BCVaccineValidator.enableRemoteRules {return}
+        if isUpdating || !BCVaccineValidator.enableRemoteRules { return }
         isUpdating = true
 #if DEBUG
         print("Updating issuers")
@@ -52,15 +52,16 @@ class IssuerManager: DirectoryManager {
                 return
             }
             self.store(issuers: issuers)
-            self.updatedIssuers(issuers: issuers, exipersInMinutes: Constants.DataExpiery.defaultIssuersTimeout)
+            self.updatedIssuers(issuers: issuers,
+                                expiresInMinutes: RulesManager.shared.getIssuersCacheExpiryIntervalInMinutes())
             self.isUpdating = false
         }
     }
     
-    private func updatedIssuers(issuers: Issuers, exipersInMinutes: Double) {
+    func updatedIssuers(issuers: Issuers, expiresInMinutes: Double) {
         let defaults = UserDefaults.standard
         let now = Date()
-        defaults.set(now.addingTimeInterval(_: exipersInMinutes * 60), forKey: Constants.UserDefaultKeys.issuersTimeOutKey)
+        defaults.set(now.addingTimeInterval(_: expiresInMinutes * 60), forKey: Constants.UserDefaultKeys.issuersTimeOutKey)
 #if DEBUG
         print("Updated issuers")
 #endif
@@ -75,10 +76,8 @@ class IssuerManager: DirectoryManager {
             let data = try JSONEncoder().encode(issuers)
             // write
             try data.write(to: path)
-            return
         } catch {
             print(error.localizedDescription)
-            return
         }
     }
     

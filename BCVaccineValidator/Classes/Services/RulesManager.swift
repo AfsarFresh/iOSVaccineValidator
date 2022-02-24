@@ -7,6 +7,8 @@
 
 import Foundation
 class RulesManager: DirectoryManager {
+    private let rulesDownloadCompletions = SynchronizedArray<((VaccinationRules?) -> Void)>()
+    
     private var isUpdating = false
     
     static let shared = RulesManager()
@@ -19,23 +21,32 @@ class RulesManager: DirectoryManager {
     /// if rules need to be updated, the update will be triggered but this function wont wait for the update to complete.
     /// your next function call should have the updated rules
     /// - Parameter completion: all stored vaccination rules
-    public func getRules(completion: @escaping(_ rules: VaccinationRules?)->Void) {
+    public func getRules() -> VaccinationRules? {
         seedOrUpdateIfNeeded()
-        return completion(fetchLocalRules() ?? seedRules())
+        return fetchLocalRules() ?? fetchAndSeedBundledRules()
     }
     
-    public func getRulesFor(iss issuer: String, completion: @escaping(_ rule: RuleSet?) -> Void) {
-        getRules { rules in
-            guard let rules = rules else {return completion(nil)}
-            
+    public func getRulesFor(iss issuer: String, shouldFallbackToHostForGlobalIssuer: Bool) -> RuleSet? {
+        guard let rules = getRules() else {
+            return nil
+        }
+        for rule in rules.ruleSet {
+            let resolved = self.resolveRuleTarget(ruleTarget: rule.ruleTarget).map({$0.lowercased()})
+            if resolved.contains(issuer.removeWellKnownJWKS_URLExtension().lowercased()) {
+                return rule
+            }
+        }
+        
+        if shouldFallbackToHostForGlobalIssuer,
+           issuer == Constants.JWKSPublic.issuer,
+           let issuerHost = URLComponents(string: issuer)?.host?.lowercased() {
             for rule in rules.ruleSet {
-                let resolved = self.resolveRuleTarget(ruleTarget: rule.ruleTarget).map({$0.lowercased()})
-                if resolved.contains(issuer.removeWellKnownJWKS_URLExtension().lowercased()) {
-                    return completion(rule)
+                if rule.ruleTarget.lowercased().contains(issuerHost) {
+                    return rule
                 }
             }
-            return completion(nil)
         }
+        return nil
     }
     
     private func seedOrUpdateIfNeeded() {
@@ -44,20 +55,33 @@ class RulesManager: DirectoryManager {
             print("Seeding rules")
 #endif
             // need to seed
-            let _ = seedRules()
-            updateRules()
+            let _ = fetchAndSeedBundledRules()
+            downloadAndUpdateRules(completion: nil)
         } else if
             let expierdAt = UserDefaults.standard.object(forKey: Constants.UserDefaultKeys.vaccinationRulesTimeOutKey) as? Date {
             if Date() > expierdAt {
-                updateRules()
+                downloadAndUpdateRules(completion: nil)
             }
         } else {
-            updateRules()
+            downloadAndUpdateRules(completion: nil)
         }
     }
     
-    func updateRules() {
-        if isUpdating || !BCVaccineValidator.enableRemoteRules {return}
+    func downloadAndUpdateRules(completion: ((VaccinationRules?) -> Void)?) {
+        guard BCVaccineValidator.enableRemoteRules else {
+            completion?(nil); return
+        }
+        if let comp = completion {
+            rulesDownloadCompletions.append(comp)
+        }
+        guard !isUpdating else { return }
+        let fireCompletions = { [weak self] (rules: VaccinationRules?) in
+            guard let self = self else { return }
+            self.rulesDownloadCompletions.forEach {
+                $0(rules)
+            }
+            self.rulesDownloadCompletions.removeAll(completion: nil)
+        }
         isUpdating = true
 #if DEBUG
         print("Updating rules")
@@ -66,18 +90,35 @@ class RulesManager: DirectoryManager {
         networkService.getRules { result in
             guard let rules = result else {
                 self.isUpdating = false
+                fireCompletions(nil)
                 return
             }
             self.store(rules: rules)
-            self.updatedRules(rules: rules, exipersInMinutes: Constants.DataExpiery.detaultRulesTimeout)
+            self.updatedRules(rules: rules, expiresInMinutes: self.getRulesCacheExpiryIntervalInMinutes())
             self.isUpdating = false
+            fireCompletions(rules)
         }
     }
     
-    private func updatedRules(rules: VaccinationRules, exipersInMinutes: Double) {
+    func getIssuersCacheExpiryIntervalInMinutes() -> Double {
+        let rules = getRulesFor(iss: Constants.JWKSPublic.issuer, shouldFallbackToHostForGlobalIssuer: true)
+        return rules?.cache?.expiry.issuers ?? Constants.DataExpiry.defaultIssuersTimeout
+    }
+    
+    func getRulesCacheExpiryIntervalInMinutes() -> Double {
+        let rules = getRulesFor(iss: Constants.JWKSPublic.issuer, shouldFallbackToHostForGlobalIssuer: true)
+        return rules?.cache?.expiry.rules ?? Constants.DataExpiry.detaultRulesTimeout
+    }
+    
+    func getRevocationsCacheExpiryIntervalInMinutes() -> Double {
+        let rules = getRulesFor(iss: Constants.JWKSPublic.issuer, shouldFallbackToHostForGlobalIssuer: true)
+        return rules?.cache?.expiry.revocations ?? Constants.DataExpiry.defaultRevocationsExpiryInMinutes
+    }
+    
+    private func updatedRules(rules: VaccinationRules, expiresInMinutes: Double) {
         let defaults = UserDefaults.standard
         let now = Date()
-        defaults.set(now.addingTimeInterval(_: exipersInMinutes * 60), forKey: Constants.UserDefaultKeys.vaccinationRulesTimeOutKey)
+        defaults.set(now.addingTimeInterval(_: expiresInMinutes * 60), forKey: Constants.UserDefaultKeys.vaccinationRulesTimeOutKey)
 #if DEBUG
         print("Updated rules")
 #endif
@@ -101,7 +142,7 @@ class RulesManager: DirectoryManager {
         }
     }
     
-    private func seedRules() -> VaccinationRules? {
+    private func fetchAndSeedBundledRules() -> VaccinationRules? {
         // Get Path
         guard let bundledFilePath = BCVaccineValidator.resourceBundle.url(forResource: Constants.Directories.rules.fileName, withExtension: "") else {
 #if DEBUG
@@ -181,11 +222,10 @@ class RulesManager: DirectoryManager {
         }
     }
     
-    private func fetchLocalRules() -> VaccinationRules? {
+    func fetchLocalRules() -> VaccinationRules? {
         let documentsDirectory = documentDirectory().appendingPathComponent(Constants.Directories.rules.directoryName)
-        guard directoryExists(path: documentsDirectory) else {return nil}
+        guard directoryExists(path: documentsDirectory) else { return nil }
         let filePath = documentsDirectory.appendingPathComponent(Constants.Directories.rules.fileName)
-        
         do {
             let data = try Data(contentsOf: filePath)
             let rules = try JSONDecoder().decode(VaccinationRules.self, from: data)

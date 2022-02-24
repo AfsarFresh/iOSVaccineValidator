@@ -48,13 +48,7 @@ internal extension RevocationManager {
     
     func downloadAndCacheIfNeeded(completion: @escaping () -> Void) {
         // Get list of issuers
-        IssuerManager.shared.getIssuers { [weak self] result in
-            guard let self = self else { return }
-            guard let issuers = result else {
-                // It is highly unlikely that result is nil.
-                Logger.logFailure("Critical Error: No issuers found") // NO I18N
-                return completion()
-            }
+        if let issuers = IssuerManager.shared.getIssuers() {
             let dispatchGroup = DispatchGroup()
             issuers.participatingIssuers.forEach { issuer in
                 dispatchGroup.enter()
@@ -67,6 +61,10 @@ internal extension RevocationManager {
             dispatchGroup.notify(queue: .main) {
                 completion()
             }
+        } else {
+            // It is highly unlikely that result is nil.
+            Logger.logFailure("Critical Error: No issuers found") // NO I18N
+            completion()
         }
     }
     
@@ -105,7 +103,7 @@ internal extension RevocationManager {
         if let notFoundDate = self.notFoundEndPoints[filePathSafeName]?[key.kid] {
             // Preventing unnecessary network operation to the endpoint that doesn't exist for a brief period.
             guard Date() >
-                    notFoundDate.addingTimeInterval(TimeInterval(Constants.DataExpiery.revocationsExpiryInMinutes * 60)) else {
+                    notFoundDate.addingTimeInterval(TimeInterval(RulesManager.shared.getRevocationsCacheExpiryIntervalInMinutes() * 60)) else {
                 return completion(nil)
             }
         }
@@ -117,7 +115,7 @@ internal extension RevocationManager {
         } else {
             if let localDataSavedAt = UserDefaults.standard.object(forKey: getCrlDataSavedAtUDKey(issuer: issuer, keyId: key.kid)) as? Date {
                 guard Date() >
-                        localDataSavedAt.addingTimeInterval(TimeInterval(Constants.DataExpiery.revocationsExpiryInMinutes * 60)) else {
+                        localDataSavedAt.addingTimeInterval(TimeInterval(RulesManager.shared.getRevocationsCacheExpiryIntervalInMinutes() * 60)) else {
                     return completion(nil)
                 }
             }

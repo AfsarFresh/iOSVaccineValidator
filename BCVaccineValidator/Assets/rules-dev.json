@@ -9,6 +9,13 @@
       "daysSinceLastInterval": 1,
       "ruleTarget": "https://pvc.service.yukon.ca/test/v1/verifier/.well-known/issuers.json",
       "version": "V1",
+      "cache": {
+        "expiry": {
+          "rules": 1,
+          "issuers": 1,
+          "revocations": 1
+        }
+      },
       "vaccinationRules": [
         {
           "cvxCode": "207",
